@@ -1,0 +1,5 @@
+ALTER TABLE reminder
+ADD CONSTRAINT fk_reminder_user
+FOREIGN KEY (user_id)
+REFERENCES users (id)
+ON DELETE CASCADE;
