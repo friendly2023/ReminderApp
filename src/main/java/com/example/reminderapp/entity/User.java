@@ -3,6 +3,8 @@ package com.example.reminderapp.entity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -14,6 +16,7 @@ import java.util.List;
 @Table(name = "users")
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "username", nullable = false)
     private String userName;
@@ -27,6 +30,13 @@ public class User {
     private List<Reminder> reminders = new ArrayList<>();
 
     public User() {
+    }
+
+    public User(String userName, String email, String telegramContact, String password) {
+        this.userName = userName;
+        this.email = email;
+        this.telegramContact = telegramContact;
+        this.password = password;
     }
 
     public int getId() {
