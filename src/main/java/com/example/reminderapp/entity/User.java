@@ -10,6 +10,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,17 +21,28 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private int id;
     @Column(name = "username", nullable = false)
+    @Getter
+    @Setter
     private String userName;
     @Column(name = "email", nullable = false)
+    @Getter
+    @Setter
     private String email;
     @Column(name = "telegram_contact")
+    @Getter
+    @Setter
     private String telegramContact;
     @Column(name = "password", nullable = false)
+    @Getter
+    @Setter
     private String password;
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
+    @Getter
+    @Setter
     private Role role;
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Reminder> reminders = new ArrayList<>();
@@ -43,50 +56,6 @@ public class User {
         this.email = email;
         this.telegramContact = telegramContact;
         this.password = password;
-        this.role = Role.ADMIN;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getTelegramContact() {
-        return telegramContact;
-    }
-
-    public void setTelegramContact(String telegramContact) {
-        this.telegramContact = telegramContact;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
+        this.role = Role.USER;
     }
 }

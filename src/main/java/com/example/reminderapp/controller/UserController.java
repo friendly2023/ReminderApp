@@ -4,8 +4,8 @@ import com.example.reminderapp.dto.UserRequestDto;
 import com.example.reminderapp.dto.UserResponseDto;
 import com.example.reminderapp.service.UserService;
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -17,14 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/domain/api/v1/user")
 @Validated
+@Slf4j
+@RequiredArgsConstructor
 public class UserController {
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @PostMapping(value = "/create")
     public ResponseEntity<UserResponseDto> createUser(@Valid @RequestBody UserRequestDto userRequestDto) {

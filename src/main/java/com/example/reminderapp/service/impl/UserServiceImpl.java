@@ -6,21 +6,17 @@ import com.example.reminderapp.entity.User;
 import com.example.reminderapp.mapper.UserMapper;
 import com.example.reminderapp.repository.UserRepository;
 import com.example.reminderapp.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private UserMapper userMapper;
 
-    public UserServiceImpl() {
-    }
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
     public UserResponseDto createUser(UserRequestDto userRequestDto) {

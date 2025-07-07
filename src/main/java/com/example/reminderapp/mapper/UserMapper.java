@@ -3,18 +3,15 @@ package com.example.reminderapp.mapper;
 import com.example.reminderapp.dto.UserRequestDto;
 import com.example.reminderapp.dto.UserResponseDto;
 import com.example.reminderapp.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class UserMapper {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    public UserMapper() {
-    }
+    private final PasswordEncoder passwordEncoder;
 
     public User toEntity(UserRequestDto dto) {
 

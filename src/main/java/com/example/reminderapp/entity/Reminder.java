@@ -6,6 +6,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
 
@@ -13,14 +15,23 @@ import java.time.ZonedDateTime;
 @Table(name = "reminder")
 public class Reminder {
     @Id
+    @Getter
     private int id;
     @Column(name = "title", nullable = false)
+    @Getter
+    @Setter
     private String title;
     @Column(name = "description")
+    @Getter
+    @Setter
     private String description;
     @Column(name = "remind", nullable = false)
+    @Getter
+    @Setter
     private ZonedDateTime remind;
     @Column(name = "user_id", insertable = false, updatable = false, nullable = false)
+    @Getter
+    @Setter
     private int userId;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -28,37 +39,5 @@ public class Reminder {
 
     public Reminder() {
         this.userId = user.getId();
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public ZonedDateTime getRemind() {
-        return remind;
-    }
-
-    public void setRemind(ZonedDateTime time) {
-        this.remind = time;
-    }
-
-    public int getUserId() {
-        return user != null ? user.getId() : userId;
     }
 }
