@@ -3,6 +3,8 @@ package com.example.reminderapp.entity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,10 +28,14 @@ public class User {
     private String telegramContact;
     @Column(name = "password", nullable = false)
     private String password;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Reminder> reminders = new ArrayList<>();
 
     public User() {
+        this.role = Role.USER;
     }
 
     public User(String userName, String email, String telegramContact, String password) {
@@ -37,6 +43,7 @@ public class User {
         this.email = email;
         this.telegramContact = telegramContact;
         this.password = password;
+        this.role = Role.ADMIN;
     }
 
     public int getId() {
@@ -73,5 +80,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

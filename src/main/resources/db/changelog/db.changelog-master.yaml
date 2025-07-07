@@ -22,3 +22,11 @@ databaseChangeLog:
         - sqlFile:
             path: sql/003-add-fk-reminder-user.sql
             relativeToChangelogFile: true
+
+  - changeSet:
+      id: 004-add-role-to-users
+      author: vladimir
+      changes:
+        - sqlFile:
+            path: sql/004-add-role-to-users.sql
+            relativeToChangelogFile: true
