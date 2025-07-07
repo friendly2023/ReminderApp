@@ -32,7 +32,8 @@ public class UserMapper {
                 user.getId(),
                 user.getUserName(),
                 user.getEmail(),
-                user.getTelegramContact()
+                user.getTelegramContact(),
+                user.getRole()
         );
     }
 }
