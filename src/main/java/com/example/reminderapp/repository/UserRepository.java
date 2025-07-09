@@ -3,8 +3,9 @@ package com.example.reminderapp.repository;
 import com.example.reminderapp.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
-    boolean existsByUserName(String userName);
+import java.util.Optional;
 
-    boolean existsByEmail(String email);
+public interface UserRepository extends JpaRepository<User, Long> {
+
+    Optional<User> findByEmail(String email);
 }

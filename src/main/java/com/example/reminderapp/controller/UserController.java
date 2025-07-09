@@ -21,21 +21,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
-
-    @PostMapping(value = "/create")
-    public ResponseEntity<UserResponseDto> createUser(@Valid @RequestBody UserRequestDto userRequestDto) {
-
-        log.info("Получен запрос на создание пользователя");
-        log.debug("Запрос: {}", userRequestDto);
-
-        UserResponseDto createdUser = userService.createUser(userRequestDto);
-
-        ResponseEntity<UserResponseDto> response = ResponseEntity.status(HttpStatus.CREATED)
-                .body(createdUser);
-
-        log.info("Выполнен запрос на создание пользователя");
-
-        return response;
-    }
 }
