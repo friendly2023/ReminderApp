@@ -16,7 +16,7 @@ import java.time.ZonedDateTime;
 public class Reminder {
     @Id
     @Getter
-    private int id;
+    private long id;
     @Column(name = "title", nullable = false)
     @Getter
     @Setter
@@ -32,7 +32,7 @@ public class Reminder {
     @Column(name = "user_id", insertable = false, updatable = false, nullable = false)
     @Getter
     @Setter
-    private int userId;
+    private long userId;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
