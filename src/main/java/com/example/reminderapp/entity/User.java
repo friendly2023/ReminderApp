@@ -22,11 +22,11 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
-    private int id;
-    @Column(name = "username", nullable = false)
+    private long id;
+    @Column(name = "full_name", nullable = false)
     @Getter
     @Setter
-    private String userName;
+    private String fullName;
     @Column(name = "email", nullable = false)
     @Getter
     @Setter
@@ -35,10 +35,6 @@ public class User {
     @Getter
     @Setter
     private String telegramContact;
-    @Column(name = "password", nullable = false)
-    @Getter
-    @Setter
-    private String password;
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     @Getter
@@ -51,11 +47,10 @@ public class User {
         this.role = Role.USER;
     }
 
-    public User(String userName, String email, String telegramContact, String password) {
-        this.userName = userName;
+    public User(String fullName, String email, String telegramContact, Role role) {
+        this.fullName = fullName;
         this.email = email;
         this.telegramContact = telegramContact;
-        this.password = password;
-        this.role = Role.USER;
+        this.role = role;
     }
 }
