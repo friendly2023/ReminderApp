@@ -20,3 +20,19 @@ spring:
   # Liquibase
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: ${GOOGLE_CLIENTID}
+            clientSecret: ${GOOGLE_CLIENTSECRET}
+            redirectUri: http://localhost:8080/login/oauth2/code/google
+            scope: openid,email,profile
+
+  # logging
+logging:
+  level:
+    com.example.reminderapp.config: DEBUG
+    com.example.reminderapp.service: DEBUG
