@@ -26,7 +26,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        log.info("[SecurityConfig] Настройка SecurityFilterChain");
+        log.info("SecurityConfig стартовал");
+
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
@@ -35,7 +36,7 @@ public class SecurityConfig {
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
-                                .userService(customOAuth2UserService)
+                                .oidcUserService(customOAuth2UserService)
                         )
                 );
 
