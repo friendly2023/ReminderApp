@@ -30,9 +30,13 @@ spring:
             clientSecret: ${GOOGLE_CLIENTSECRET}
             redirectUri: http://localhost:8080/login/oauth2/code/google
             scope: openid,email,profile
+      resourceserver:
+        jwt:
+          issuer-uri: https://accounts.google.com
 
   # logging
 logging:
   level:
     com.example.reminderapp.config: DEBUG
     com.example.reminderapp.service: DEBUG
+    com.example.reminderapp.controller: DEBUG
