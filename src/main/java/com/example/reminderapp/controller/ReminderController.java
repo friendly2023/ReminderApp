@@ -2,7 +2,7 @@ package com.example.reminderapp.controller;
 
 import com.example.reminderapp.dto.NewReminderDTO;
 import com.example.reminderapp.dto.ReminderResponseDTO;
-import com.example.reminderapp.entity.Reminder;
+import com.example.reminderapp.mapper.ReminderMapper;
 import com.example.reminderapp.service.ReminderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,23 +24,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReminderController {
 
     private final ReminderService reminderService;
+    private final ReminderMapper mapper;
 
     @PostMapping(value = "/create")
     public ResponseEntity<ReminderResponseDTO> createReminder(@Valid @RequestBody NewReminderDTO newReminderDTO, OAuth2AuthenticationToken auth) {
         log.info("Получен запрос на создание напоминания");
 
-        Reminder createdReminder = reminderService.createReminder(newReminderDTO, auth);
-
-        ReminderResponseDTO responseDTO = new ReminderResponseDTO(
-                createdReminder.getId(),
-                createdReminder.getTitle(),
-                createdReminder.getDescription(),
-                createdReminder.getRemind()
-        );
+        ReminderResponseDTO createdReminder = reminderService.createReminder(newReminderDTO, auth);
 
         log.info("Выполнен запрос на создание напоминания");
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdReminder);
     }
 
 }

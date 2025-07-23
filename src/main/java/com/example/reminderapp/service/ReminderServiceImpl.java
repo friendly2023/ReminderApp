@@ -1,6 +1,7 @@
 package com.example.reminderapp.service;
 
 import com.example.reminderapp.dto.NewReminderDTO;
+import com.example.reminderapp.dto.ReminderResponseDTO;
 import com.example.reminderapp.entity.Reminder;
 import com.example.reminderapp.entity.User;
 import com.example.reminderapp.mapper.ReminderMapper;
@@ -22,7 +23,7 @@ public class ReminderServiceImpl implements ReminderService {
     private final ReminderMapper mapper;
 
     @Override
-    public Reminder createReminder(NewReminderDTO newReminderDTO, OAuth2AuthenticationToken auth) {
+    public ReminderResponseDTO createReminder(NewReminderDTO newReminderDTO, OAuth2AuthenticationToken auth) {
         log.debug("ReminderServiceImpl стартовал");
 
         String email = auth.getPrincipal().getAttribute("email");
@@ -35,11 +36,12 @@ public class ReminderServiceImpl implements ReminderService {
 
         Reminder newReminder = mapper.toEntity(newReminderDTO);
         newReminder.setUser(user);
+        ReminderResponseDTO responseDTO = mapper.toReminderResponseDTO(newReminder);
 
         reminderRepository.save(newReminder);
 
         log.info("Напоминание создано и сохранено в БД");
 
-        return newReminder;
+        return responseDTO;
     }
 }
