@@ -6,5 +6,5 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 
 public interface ReminderService {
 
-    ReminderResponseDTO createReminder(NewReminderDTO newReminderDTO, OAuth2AuthenticationToken auth);
+    ReminderResponseDTO createReminder(NewReminderDTO newReminderDTO, String email);
 }

@@ -30,7 +30,8 @@ public class ReminderController {
     public ResponseEntity<ReminderResponseDTO> createReminder(@Valid @RequestBody NewReminderDTO newReminderDTO, OAuth2AuthenticationToken auth) {
         log.info("Получен запрос на создание напоминания");
 
-        ReminderResponseDTO createdReminder = reminderService.createReminder(newReminderDTO, auth);
+        String email = auth.getPrincipal().getAttribute("email");
+        ReminderResponseDTO createdReminder = reminderService.createReminder(newReminderDTO, email);
 
         log.info("Выполнен запрос на создание напоминания");
 

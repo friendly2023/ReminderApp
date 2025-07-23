@@ -23,10 +23,8 @@ public class ReminderServiceImpl implements ReminderService {
     private final ReminderMapper mapper;
 
     @Override
-    public ReminderResponseDTO createReminder(NewReminderDTO newReminderDTO, OAuth2AuthenticationToken auth) {
+    public ReminderResponseDTO createReminder(NewReminderDTO newReminderDTO, String email) {
         log.debug("ReminderServiceImpl стартовал");
-
-        String email = auth.getPrincipal().getAttribute("email");
 
         log.debug("email: {}", email);
         log.debug("{}", newReminderDTO);
