@@ -34,6 +34,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OidcUserReques
         String name = oidcUser.getFullName();
 
         User user = userRepository.findByEmail(email).orElseGet(() -> {
+            //todo: переписать использовав mapstruct
             User newUser = new User(name, email, null, Role.USER);
             log.info("Новый User зарегистрирован");
             return userRepository.save(newUser);
