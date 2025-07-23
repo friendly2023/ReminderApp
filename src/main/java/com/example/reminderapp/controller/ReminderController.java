@@ -2,6 +2,7 @@ package com.example.reminderapp.controller;
 
 import com.example.reminderapp.dto.NewReminderDTO;
 import com.example.reminderapp.dto.ReminderResponseDTO;
+import com.example.reminderapp.entity.Reminder;
 import com.example.reminderapp.mapper.ReminderMapper;
 import com.example.reminderapp.service.ReminderService;
 import jakarta.validation.Valid;
@@ -15,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,11 +52,29 @@ public class ReminderController {
         log.info("Получен запрос на получение напоминания по id");
 
         String email = auth.getPrincipal().getAttribute("email");
-        ReminderResponseDTO dbReminder = reminderService.getReminderById(Long.parseLong(idReminder), email);
+        Reminder dbReminder = reminderService.getReminderById(Long.parseLong(idReminder), email);
+        ReminderResponseDTO responseDTO = mapper.toReminderResponseDTO(dbReminder);
 
         log.info("Выполнен запрос на получение напоминания по id");
 
-        return ResponseEntity.status(HttpStatus.OK).body(dbReminder);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
 
+    @PutMapping(value = "/{idReminder}")
+    public ResponseEntity<ReminderResponseDTO> updateReminder(@PathVariable @Pattern(
+            regexp = "^(?:[1-8]\\d{0,18})$",
+            message = "ID должен быть положительным числом менее 9*10^18")
+                                                              String idReminder,
+                                                              @Valid @RequestBody NewReminderDTO updateReminderDTO,
+                                                              OAuth2AuthenticationToken auth) {
+        log.info("Получен запрос на изменение напоминания");
+
+        String email = auth.getPrincipal().getAttribute("email");
+        Reminder updatedReminder = reminderService.updateReminder(Long.parseLong(idReminder), updateReminderDTO, email);
+        ReminderResponseDTO responseDTO = mapper.toReminderResponseDTO(updatedReminder);
+
+        log.info("Выполнен запрос на изменение напоминания");
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
+    }
 }

@@ -46,7 +46,7 @@ public class ReminderServiceImpl implements ReminderService {
     }
 
     @Override
-    public ReminderResponseDTO getReminderById(long idReminder, String email) {
+    public Reminder getReminderById(long idReminder, String email) {
         log.debug("getReminderById стартовал");
         log.debug("idReminder: {}, email: {}", idReminder, email);
 
@@ -57,6 +57,29 @@ public class ReminderServiceImpl implements ReminderService {
 
         log.info("Напоминание найдено");
 
-        return responseDTO;
+        return dbReminder;
+    }
+
+    @Override
+    public Reminder updateReminder(long idReminder, NewReminderDTO newReminderDTO, String email) {
+        log.debug("updateReminder стартовал");
+        log.debug("idReminder: {}, email: {}", idReminder, email);
+
+        Reminder dbReminder = getReminderById(idReminder, email);
+        Reminder updatedReminder = upReminder(dbReminder, newReminderDTO);
+
+        reminderRepository.save(updatedReminder);
+
+        log.info("Напоминание отредактированно");
+
+        return updatedReminder;
+    }
+
+    private Reminder upReminder(Reminder dbReminder, NewReminderDTO newReminderDTO) {
+        dbReminder.setTitle(newReminderDTO.title());
+        dbReminder.setDescription(newReminderDTO.description());
+        dbReminder.setRemind(newReminderDTO.remind());
+
+        return dbReminder;
     }
 }
