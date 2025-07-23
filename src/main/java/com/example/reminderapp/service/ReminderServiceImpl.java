@@ -10,7 +10,6 @@ import com.example.reminderapp.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,14 +24,12 @@ public class ReminderServiceImpl implements ReminderService {
 
     @Override
     public ReminderResponseDTO createReminder(NewReminderDTO newReminderDTO, String email) {
-        //todo:переименовать лог
-        log.debug("ReminderServiceImpl стартовал");
+        log.debug("createReminder стартовал");
 
         log.debug("email: {}", email);
         log.debug("{}", newReminderDTO);
-        //todo:рефакторинг
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь с email " + email + " не найден"));
+
+        User user = userService.getUserByEmail(email);
 
         Reminder newReminder = mapper.toEntity(newReminderDTO);
         newReminder.setUser(user);
