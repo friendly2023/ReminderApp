@@ -43,6 +43,8 @@ public class ErrorHandlingControllerAdvice {
                         cv.getMessage()))
                 .toList();
 
+        log.warn("Ошибка: {}", violations);
+
         return new ValidationErrorResponse(violations);
     }
 

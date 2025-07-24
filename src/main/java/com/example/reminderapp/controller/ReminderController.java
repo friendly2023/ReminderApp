@@ -5,8 +5,8 @@ import com.example.reminderapp.dto.ReminderResponseDTO;
 import com.example.reminderapp.entity.Reminder;
 import com.example.reminderapp.mapper.ReminderMapper;
 import com.example.reminderapp.service.ReminderService;
+import com.example.reminderapp.validation.ValidIdReminder;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -44,10 +44,7 @@ public class ReminderController {
     }
 
     @GetMapping(value = "/{idReminder}")
-    public ResponseEntity<ReminderResponseDTO> getReminder(@PathVariable @Pattern(
-            regexp = "^(?:[1-8]\\d{0,18})$",
-            message = "ID должен быть положительным числом менее 9*10^18")
-                                                           String idReminder,
+    public ResponseEntity<ReminderResponseDTO> getReminder(@PathVariable @ValidIdReminder String idReminder,
                                                            OAuth2AuthenticationToken auth) {
         log.info("Получен запрос на получение напоминания по id");
 
@@ -61,10 +58,7 @@ public class ReminderController {
     }
 
     @PutMapping(value = "/{idReminder}")
-    public ResponseEntity<ReminderResponseDTO> updateReminder(@PathVariable @Pattern(
-            regexp = "^(?:[1-8]\\d{0,18})$",
-            message = "ID должен быть положительным числом менее 9*10^18")
-                                                              String idReminder,
+    public ResponseEntity<ReminderResponseDTO> updateReminder(@PathVariable @ValidIdReminder String idReminder,
                                                               @Valid @RequestBody NewReminderDTO updateReminderDTO,
                                                               OAuth2AuthenticationToken auth) {
         log.info("Получен запрос на изменение напоминания");
