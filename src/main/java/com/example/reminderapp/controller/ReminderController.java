@@ -35,6 +35,7 @@ public class ReminderController {
     private static final String GET_REMINDER = "получение напоминания по id";
     private static final String UPDATE_REMINDER = "изменение напоминания";
     private static final String DELETE_REMINDER_BY_ID = "удаление напоминания по id";
+    private static final String DELETE_LAST_REMINDER = "удаление последнего созданного напоминания";
     private final ReminderService reminderService;
     private final ReminderMapper mapper;
 
@@ -84,6 +85,17 @@ public class ReminderController {
         reminderService.deleteReminderById(Long.parseLong(idReminder), getEmailFromToken(auth));
 
         log.info(LOG_SUCCESS_PREFIX + DELETE_REMINDER_BY_ID);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping(value = "/last")
+    public ResponseEntity<Void> deleteLastReminder(OAuth2AuthenticationToken auth) {
+        log.info(LOG_REQUEST_PREFIX + DELETE_LAST_REMINDER);
+
+        reminderService.deleteLastReminder(getEmailFromToken(auth));
+
+        log.info(LOG_SUCCESS_PREFIX + DELETE_LAST_REMINDER);
 
         return ResponseEntity.noContent().build();
     }

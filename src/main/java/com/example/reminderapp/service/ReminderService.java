@@ -13,4 +13,6 @@ public interface ReminderService {
     Reminder updateReminder(long idReminder, NewReminderDTO newReminderDTO, String email);
 
     void deleteReminderById(long idReminder, String email);
+
+    void deleteLastReminder(String email);
 }

@@ -79,6 +79,20 @@ public class ReminderServiceImpl implements ReminderService {
         log.info("Напоминание по id удалено");
     }
 
+    @Override
+    public void deleteLastReminder(String email) {
+        log.debug("deleteLastReminder стартовал: email={}", email);
+
+        Reminder dbReminder = reminderRepository.findFirstByUserEmailOrderByIdDesc(email)
+                .orElseThrow(() -> new EntityNotFoundException("У пользователя нет созданных напоминаний"));
+
+        log.debug("idReminder = {}", dbReminder.getId());
+
+        reminderRepository.delete(dbReminder);
+
+        log.info("Последнее созданное напоминание удалено");
+    }
+
     private Reminder upReminder(Reminder dbReminder, NewReminderDTO newReminderDTO) {
         dbReminder.setTitle(newReminderDTO.title());
         dbReminder.setDescription(newReminderDTO.description());
