@@ -42,8 +42,7 @@ public class ReminderController {
     public ResponseEntity<ReminderResponseDTO> createReminder(@Valid @RequestBody NewReminderDTO newReminderDTO, OAuth2AuthenticationToken auth) {
         log.info(LOG_REQUEST_PREFIX + CREATE_REMINDER);
 
-        String email = auth.getPrincipal().getAttribute("email");
-        ReminderResponseDTO createdReminder = reminderService.createReminder(newReminderDTO, email);
+        ReminderResponseDTO createdReminder = reminderService.createReminder(newReminderDTO, getEmailFromToken(auth));
 
         log.info(LOG_SUCCESS_PREFIX + CREATE_REMINDER);
 
@@ -55,8 +54,7 @@ public class ReminderController {
                                                            OAuth2AuthenticationToken auth) {
         log.info(LOG_REQUEST_PREFIX + GET_REMINDER);
 
-        String email = auth.getPrincipal().getAttribute("email");
-        Reminder dbReminder = reminderService.getReminderById(Long.parseLong(idReminder), email);
+        Reminder dbReminder = reminderService.getReminderById(Long.parseLong(idReminder), getEmailFromToken(auth));
         ReminderResponseDTO responseDTO = mapper.toReminderResponseDTO(dbReminder);
 
         log.info(LOG_SUCCESS_PREFIX + GET_REMINDER);
@@ -70,8 +68,7 @@ public class ReminderController {
                                                               OAuth2AuthenticationToken auth) {
         log.info(LOG_REQUEST_PREFIX + UPDATE_REMINDER);
 
-        String email = auth.getPrincipal().getAttribute("email");
-        Reminder updatedReminder = reminderService.updateReminder(Long.parseLong(idReminder), updateReminderDTO, email);
+        Reminder updatedReminder = reminderService.updateReminder(Long.parseLong(idReminder), updateReminderDTO, getEmailFromToken(auth));
         ReminderResponseDTO responseDTO = mapper.toReminderResponseDTO(updatedReminder);
 
         log.info(LOG_SUCCESS_PREFIX + UPDATE_REMINDER);
@@ -87,5 +84,10 @@ public class ReminderController {
         log.info(LOG_SUCCESS_PREFIX + DELETE_REMINDER_BY_ID);
 
         return ResponseEntity.noContent().build();
+    }
+
+    private String getEmailFromToken(OAuth2AuthenticationToken auth) {
+
+        return auth.getPrincipal().getAttribute("email");
     }
 }
