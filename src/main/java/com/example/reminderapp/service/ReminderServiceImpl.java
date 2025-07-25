@@ -6,7 +6,6 @@ import com.example.reminderapp.entity.Reminder;
 import com.example.reminderapp.entity.User;
 import com.example.reminderapp.mapper.ReminderMapper;
 import com.example.reminderapp.repository.ReminderRepository;
-import com.example.reminderapp.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +15,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 public class ReminderServiceImpl implements ReminderService {
-
-    private final UserRepository userRepository;
     private final ReminderRepository reminderRepository;
     private final ReminderMapper mapper;
     private final UserService userService;
@@ -70,6 +67,16 @@ public class ReminderServiceImpl implements ReminderService {
         log.info("Напоминание отредактированно");
 
         return updatedReminder;
+    }
+
+    @Override
+    public void deleteReminderById(long idReminder, String email) {
+        log.debug("deleteReminderById стартовал: idReminder={}, email={}", idReminder, email);
+
+        Reminder reminder = getReminderById(idReminder, email);
+        reminderRepository.delete(reminder);
+
+        log.info("Напоминание по id удалено");
     }
 
     private Reminder upReminder(Reminder dbReminder, NewReminderDTO newReminderDTO) {

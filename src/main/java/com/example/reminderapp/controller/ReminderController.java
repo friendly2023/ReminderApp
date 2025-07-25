@@ -81,6 +81,8 @@ public class ReminderController {
                                                OAuth2AuthenticationToken auth) {
         log.info(LOG_REQUEST_PREFIX + DELETE_REMINDER_BY_ID);
 
+        reminderService.deleteReminderById(Long.parseLong(idReminder), getEmailFromToken(auth));
+
         log.info(LOG_SUCCESS_PREFIX + DELETE_REMINDER_BY_ID);
 
         return ResponseEntity.noContent().build();
