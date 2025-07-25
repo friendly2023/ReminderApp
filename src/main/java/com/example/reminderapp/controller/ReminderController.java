@@ -89,7 +89,7 @@ public class ReminderController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping(value = "/last")
+    @DeleteMapping(value = "/delete")
     public ResponseEntity<Void> deleteLastReminder(OAuth2AuthenticationToken auth) {
         log.info(LOG_REQUEST_PREFIX + DELETE_LAST_REMINDER);
 
