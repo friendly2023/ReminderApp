@@ -7,4 +7,7 @@ import java.util.Optional;
 
 public interface ReminderRepository extends JpaRepository<Reminder, Long> {
     Optional<Object> findByIdAndUserEmail(long idReminder, String email);
+
+    Optional<Reminder> findFirstByUserEmailOrderByIdDesc(String email);
+
 }
