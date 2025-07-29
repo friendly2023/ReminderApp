@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,17 +29,23 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 public class ReminderController {
 
+    private static final String LOG_REQUEST_PREFIX = "Получен запрос на ";
+    private static final String LOG_SUCCESS_PREFIX = "Выполнен запрос на ";
+    private static final String CREATE_REMINDER = "создание напоминания";
+    private static final String GET_REMINDER = "получение напоминания по id";
+    private static final String UPDATE_REMINDER = "изменение напоминания";
+    private static final String DELETE_REMINDER_BY_ID = "удаление напоминания по id";
+    private static final String DELETE_LAST_REMINDER = "удаление последнего созданного напоминания";
     private final ReminderService reminderService;
     private final ReminderMapper mapper;
 
     @PostMapping(value = "/create")
     public ResponseEntity<ReminderResponseDTO> createReminder(@Valid @RequestBody NewReminderDTO newReminderDTO, OAuth2AuthenticationToken auth) {
-        log.info("Получен запрос на создание напоминания");
+        log.info(LOG_REQUEST_PREFIX + CREATE_REMINDER);
 
-        String email = auth.getPrincipal().getAttribute("email");
-        ReminderResponseDTO createdReminder = reminderService.createReminder(newReminderDTO, email);
+        ReminderResponseDTO createdReminder = reminderService.createReminder(newReminderDTO, getEmailFromToken(auth));
 
-        log.info("Выполнен запрос на создание напоминания");
+        log.info(LOG_SUCCESS_PREFIX + CREATE_REMINDER);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdReminder);
     }
@@ -46,13 +53,12 @@ public class ReminderController {
     @GetMapping(value = "/{idReminder}")
     public ResponseEntity<ReminderResponseDTO> getReminder(@PathVariable @ValidIdReminder String idReminder,
                                                            OAuth2AuthenticationToken auth) {
-        log.info("Получен запрос на получение напоминания по id");
+        log.info(LOG_REQUEST_PREFIX + GET_REMINDER);
 
-        String email = auth.getPrincipal().getAttribute("email");
-        Reminder dbReminder = reminderService.getReminderById(Long.parseLong(idReminder), email);
+        Reminder dbReminder = reminderService.getReminderById(Long.parseLong(idReminder), getEmailFromToken(auth));
         ReminderResponseDTO responseDTO = mapper.toReminderResponseDTO(dbReminder);
 
-        log.info("Выполнен запрос на получение напоминания по id");
+        log.info(LOG_SUCCESS_PREFIX + GET_REMINDER);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
     }
@@ -61,14 +67,41 @@ public class ReminderController {
     public ResponseEntity<ReminderResponseDTO> updateReminder(@PathVariable @ValidIdReminder String idReminder,
                                                               @Valid @RequestBody NewReminderDTO updateReminderDTO,
                                                               OAuth2AuthenticationToken auth) {
-        log.info("Получен запрос на изменение напоминания");
+        log.info(LOG_REQUEST_PREFIX + UPDATE_REMINDER);
 
-        String email = auth.getPrincipal().getAttribute("email");
-        Reminder updatedReminder = reminderService.updateReminder(Long.parseLong(idReminder), updateReminderDTO, email);
+        Reminder updatedReminder = reminderService.updateReminder(Long.parseLong(idReminder), updateReminderDTO, getEmailFromToken(auth));
         ReminderResponseDTO responseDTO = mapper.toReminderResponseDTO(updatedReminder);
 
-        log.info("Выполнен запрос на изменение напоминания");
+        log.info(LOG_SUCCESS_PREFIX + UPDATE_REMINDER);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
+    }
+
+    @DeleteMapping(value = "/{idReminder}")
+    public ResponseEntity<Void> deleteReminder(@PathVariable @ValidIdReminder String idReminder,
+                                               OAuth2AuthenticationToken auth) {
+        log.info(LOG_REQUEST_PREFIX + DELETE_REMINDER_BY_ID);
+
+        reminderService.deleteReminderById(Long.parseLong(idReminder), getEmailFromToken(auth));
+
+        log.info(LOG_SUCCESS_PREFIX + DELETE_REMINDER_BY_ID);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping(value = "/delete")
+    public ResponseEntity<Void> deleteLastReminder(OAuth2AuthenticationToken auth) {
+        log.info(LOG_REQUEST_PREFIX + DELETE_LAST_REMINDER);
+
+        reminderService.deleteLastReminder(getEmailFromToken(auth));
+
+        log.info(LOG_SUCCESS_PREFIX + DELETE_LAST_REMINDER);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    private String getEmailFromToken(OAuth2AuthenticationToken auth) {
+
+        return auth.getPrincipal().getAttribute("email");
     }
 }
