@@ -4,6 +4,8 @@ import com.example.reminderapp.dto.NewReminderDTO;
 import com.example.reminderapp.dto.ReminderResponseDTO;
 import com.example.reminderapp.entity.Reminder;
 
+import java.util.List;
+
 public interface ReminderService {
 
     ReminderResponseDTO createReminder(NewReminderDTO newReminderDTO, String email);
@@ -15,4 +17,6 @@ public interface ReminderService {
     void deleteReminderById(long idReminder, String email);
 
     void deleteLastReminder(String email);
+
+    List<ReminderResponseDTO> getListSortReminder(String email, String sortBy, String direction);
 }

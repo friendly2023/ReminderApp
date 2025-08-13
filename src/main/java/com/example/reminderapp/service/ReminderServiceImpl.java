@@ -11,12 +11,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class ReminderServiceImpl implements ReminderService {
     private final ReminderRepository reminderRepository;
-    private final ReminderMapper mapper;
+    private final ReminderMapper reminderMapper;
     private final UserService userService;
 
     @Override
@@ -28,9 +30,9 @@ public class ReminderServiceImpl implements ReminderService {
 
         User user = userService.getUserByEmail(email);
 
-        Reminder newReminder = mapper.toEntity(newReminderDTO);
+        Reminder newReminder = reminderMapper.toEntity(newReminderDTO);
         newReminder.setUser(user);
-        ReminderResponseDTO responseDTO = mapper.toReminderResponseDTO(newReminder);
+        ReminderResponseDTO responseDTO = reminderMapper.toReminderResponseDTO(newReminder);
 
         reminderRepository.save(newReminder);
 
@@ -47,7 +49,7 @@ public class ReminderServiceImpl implements ReminderService {
         Reminder dbReminder = (Reminder) reminderRepository.findByIdAndUserEmail(idReminder, email)
                 .orElseThrow(() -> new EntityNotFoundException("Напоминание не найдено или не принадлежит пользователю"));
 
-        ReminderResponseDTO responseDTO = mapper.toReminderResponseDTO(dbReminder);
+        ReminderResponseDTO responseDTO = reminderMapper.toReminderResponseDTO(dbReminder);
 
         log.info("Напоминание найдено");
 
@@ -91,6 +93,34 @@ public class ReminderServiceImpl implements ReminderService {
         reminderRepository.delete(dbReminder);
 
         log.info("Последнее созданное напоминание удалено");
+    }
+
+    @Override
+    public List<ReminderResponseDTO> getListSortReminder(String email, String sortBy, String direction) {
+        log.debug("getListSortReminder стартовал: email={}, sortBy={}, direction={}", email, sortBy, direction);
+
+        List<Reminder> reminders;
+
+        String sort = sortBy.toLowerCase();
+        String dir = direction.toLowerCase();
+
+        switch (sort) {
+            case "name" -> reminders = dir.equals("asc")
+                    ? reminderRepository.findByUserEmailOrderByTitleAsc(email)
+                    : reminderRepository.findByUserEmailOrderByTitleDesc(email);
+
+            case "date" -> reminders = dir.equals("asc")
+                    ? reminderRepository.findByUserEmailOrderByRemindAsc(email)
+                    : reminderRepository.findByUserEmailOrderByRemindDesc(email);
+
+            default -> throw new IllegalArgumentException("Неверный параметр сортировки: " + sortBy);
+        }
+
+        log.info("Получен отсортированный список напоминаний");
+
+        return reminders.stream()
+                .map(reminderMapper::toReminderResponseDTO)
+                .toList();
     }
 
     private Reminder upReminder(Reminder dbReminder, NewReminderDTO newReminderDTO) {

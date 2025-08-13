@@ -12,4 +12,10 @@ public interface ReminderRepository extends JpaRepository<Reminder, Long> {
     Optional<Reminder> findFirstByUserEmailOrderByIdDesc(String email);
 
     List<Reminder> findByUserEmailOrderByTitleAsc(String email);
+
+    List<Reminder> findByUserEmailOrderByTitleDesc(String email);
+
+    List<Reminder> findByUserEmailOrderByRemindAsc(String email);
+
+    List<Reminder> findByUserEmailOrderByRemindDesc(String email);
 }
