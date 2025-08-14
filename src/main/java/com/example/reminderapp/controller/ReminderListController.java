@@ -53,7 +53,7 @@ public class ReminderListController {
     }
 
     @GetMapping(value = "filter")
-    public ResponseEntity<List<ReminderResponseDTO>> getFilterReminders(@RequestParam @ValidFilterParam String filterBy,
+    public ResponseEntity<List<ReminderResponseDTO>> getFilterReminders(@RequestParam(defaultValue = "DATE") @ValidFilterParam String filterBy,
                                                                         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime from,
                                                                         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime to,
                                                                         @RequestParam(required = false, defaultValue = "ASC") @ValidDirection String direction,
