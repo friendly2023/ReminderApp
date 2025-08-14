@@ -4,6 +4,8 @@ import com.example.reminderapp.dto.NewReminderDTO;
 import com.example.reminderapp.dto.ReminderResponseDTO;
 import com.example.reminderapp.entity.Reminder;
 import com.example.reminderapp.entity.User;
+import com.example.reminderapp.enums.DirectionSort;
+import com.example.reminderapp.enums.SortingParam;
 import com.example.reminderapp.mapper.ReminderMapper;
 import com.example.reminderapp.repository.ReminderRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -11,12 +13,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class ReminderServiceImpl implements ReminderService {
     private final ReminderRepository reminderRepository;
-    private final ReminderMapper mapper;
+    private final ReminderMapper reminderMapper;
     private final UserService userService;
 
     @Override
@@ -28,9 +32,9 @@ public class ReminderServiceImpl implements ReminderService {
 
         User user = userService.getUserByEmail(email);
 
-        Reminder newReminder = mapper.toEntity(newReminderDTO);
+        Reminder newReminder = reminderMapper.toEntity(newReminderDTO);
         newReminder.setUser(user);
-        ReminderResponseDTO responseDTO = mapper.toReminderResponseDTO(newReminder);
+        ReminderResponseDTO responseDTO = reminderMapper.toReminderResponseDTO(newReminder);
 
         reminderRepository.save(newReminder);
 
@@ -47,7 +51,7 @@ public class ReminderServiceImpl implements ReminderService {
         Reminder dbReminder = (Reminder) reminderRepository.findByIdAndUserEmail(idReminder, email)
                 .orElseThrow(() -> new EntityNotFoundException("Напоминание не найдено или не принадлежит пользователю"));
 
-        ReminderResponseDTO responseDTO = mapper.toReminderResponseDTO(dbReminder);
+        ReminderResponseDTO responseDTO = reminderMapper.toReminderResponseDTO(dbReminder);
 
         log.info("Напоминание найдено");
 
@@ -91,6 +95,42 @@ public class ReminderServiceImpl implements ReminderService {
         reminderRepository.delete(dbReminder);
 
         log.info("Последнее созданное напоминание удалено");
+    }
+
+    @Override
+    public List<ReminderResponseDTO> getListSortReminder(String email, String sortBy, String direction) {
+        log.debug("getListSortReminder стартовал: email={}, sortBy={}, direction={}", email, sortBy, direction);
+
+        SortingParam sortParam;
+        DirectionSort dirParam;
+
+        try {
+            sortParam = SortingParam.valueOf(sortBy.toUpperCase());
+            dirParam = DirectionSort.valueOf(direction.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Неверный параметр сортировки или направления: "
+                    + sortBy + ", " + direction);
+        }
+
+        List<Reminder> reminders;
+
+        switch (sortParam) {
+            case NAME -> reminders = dirParam == DirectionSort.ASC
+                    ? reminderRepository.findByUserEmailOrderByTitleAsc(email)
+                    : reminderRepository.findByUserEmailOrderByTitleDesc(email);
+
+            case DATE -> reminders = dirParam == DirectionSort.ASC
+                    ? reminderRepository.findByUserEmailOrderByRemindAsc(email)
+                    : reminderRepository.findByUserEmailOrderByRemindDesc(email);
+
+            default -> throw new IllegalArgumentException("Неверный параметр сортировки: " + sortBy);
+        }
+
+        log.info("Получен отсортированный список напоминаний");
+
+        return reminders.stream()
+                .map(reminderMapper::toReminderResponseDTO)
+                .toList();
     }
 
     private Reminder upReminder(Reminder dbReminder, NewReminderDTO newReminderDTO) {
