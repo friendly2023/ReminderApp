@@ -4,6 +4,7 @@ import com.example.reminderapp.dto.NewReminderDTO;
 import com.example.reminderapp.dto.ReminderResponseDTO;
 import com.example.reminderapp.entity.Reminder;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 public interface ReminderService {
@@ -19,4 +20,6 @@ public interface ReminderService {
     void deleteLastReminder(String email);
 
     List<ReminderResponseDTO> getListSortReminder(String email, String sortBy, String direction);
+
+    List<ReminderResponseDTO> getListFilterReminders(String email, String filterBy, ZonedDateTime from, ZonedDateTime to, String direction);
 }

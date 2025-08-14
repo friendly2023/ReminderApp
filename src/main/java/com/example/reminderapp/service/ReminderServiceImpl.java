@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Service
@@ -131,6 +132,24 @@ public class ReminderServiceImpl implements ReminderService {
         return reminders.stream()
                 .map(reminderMapper::toReminderResponseDTO)
                 .toList();
+    }
+
+    @Override
+    public List<ReminderResponseDTO> getListFilterReminders(String email,
+                                                            String filterBy,
+                                                            ZonedDateTime from,
+                                                            ZonedDateTime to,
+                                                            String direction) {
+
+        log.debug("getListFilterReminders стартовал: email={}, filterBy={}, from={}, to={}, direction={}",
+                email, filterBy, from, to, direction);
+
+        //функционал
+
+
+        log.info("Получен отфильтрованный список напоминаний");
+
+        return null;
     }
 
     private Reminder upReminder(Reminder dbReminder, NewReminderDTO newReminderDTO) {
