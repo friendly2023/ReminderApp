@@ -2,7 +2,7 @@ package com.example.reminderapp.enums;
 
 public enum DirectionSort {
     ASC("asc"),
-    DEST("desc");
+    DESC("desc");
 
     private final String text;
 

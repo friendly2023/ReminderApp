@@ -1,9 +1,11 @@
 package com.example.reminderapp.controller;
 
 import com.example.reminderapp.dto.ReminderResponseDTO;
+import com.example.reminderapp.enums.FilterParam;
 import com.example.reminderapp.enums.LogMessage;
 import com.example.reminderapp.service.ReminderService;
 import com.example.reminderapp.validation.ValidDirection;
+import com.example.reminderapp.validation.ValidFilterParam;
 import com.example.reminderapp.validation.ValidSortingParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,19 +53,25 @@ public class ReminderListController {
     }
 
     @GetMapping(value = "filter")
-    public ResponseEntity<List<ReminderResponseDTO>> getFilterReminders(@RequestParam(required = false) String filterBy,
+    public ResponseEntity<List<ReminderResponseDTO>> getFilterReminders(@RequestParam @ValidFilterParam String filterBy,
                                                                         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime from,
                                                                         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime to,
-                                                                        @RequestParam(required = false) @ValidDirection String direction,
+                                                                        @RequestParam(required = false, defaultValue = "ASC") @ValidDirection String direction,
                                                                         OAuth2AuthenticationToken auth) {
 
         log.info("{}{}", LogMessage.REQUEST_PREFIX.text(), GET_FILTER_REMINDER);
 
-        List<ReminderResponseDTO> listFilterReminders = reminderService.getListFilterReminders(getEmailFromToken(auth),
-                filterBy,
-                from,
-                to,
-                direction);
+        FilterParam filterParam = FilterParam.valueOf(filterBy.toUpperCase());
+
+        List<ReminderResponseDTO> listFilterReminders;
+
+        switch (filterParam) {
+            case DATE -> listFilterReminders = reminderService.getListFilterRemindersByDate(getEmailFromToken(auth),
+                    from,
+                    to,
+                    direction);
+            default -> throw new IllegalArgumentException("Неверный параметр фильтрации: " + filterParam);
+        }
 
         log.info("{}{}", LogMessage.SUCCESS_PREFIX.text(), GET_FILTER_REMINDER);
 

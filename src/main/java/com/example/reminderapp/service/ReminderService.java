@@ -21,5 +21,5 @@ public interface ReminderService {
 
     List<ReminderResponseDTO> getListSortReminder(String email, String sortBy, String direction);
 
-    List<ReminderResponseDTO> getListFilterReminders(String email, String filterBy, ZonedDateTime from, ZonedDateTime to, String direction);
+    List<ReminderResponseDTO> getListFilterRemindersByDate(String email, ZonedDateTime from, ZonedDateTime to, String direction);
 }
