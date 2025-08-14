@@ -4,6 +4,8 @@ import com.example.reminderapp.dto.NewReminderDTO;
 import com.example.reminderapp.dto.ReminderResponseDTO;
 import com.example.reminderapp.entity.Reminder;
 import com.example.reminderapp.entity.User;
+import com.example.reminderapp.enums.DirectionSort;
+import com.example.reminderapp.enums.SortingParam;
 import com.example.reminderapp.mapper.ReminderMapper;
 import com.example.reminderapp.repository.ReminderRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -99,17 +101,25 @@ public class ReminderServiceImpl implements ReminderService {
     public List<ReminderResponseDTO> getListSortReminder(String email, String sortBy, String direction) {
         log.debug("getListSortReminder стартовал: email={}, sortBy={}, direction={}", email, sortBy, direction);
 
+        SortingParam sortParam;
+        DirectionSort dirParam;
+
+        try {
+            sortParam = SortingParam.valueOf(sortBy.toUpperCase());
+            dirParam = DirectionSort.valueOf(direction.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Неверный параметр сортировки или направления: "
+                    + sortBy + ", " + direction);
+        }
+
         List<Reminder> reminders;
 
-        String sort = sortBy.toLowerCase();
-        String dir = direction.toLowerCase();
-
-        switch (sort) {
-            case "name" -> reminders = dir.equals("asc")
+        switch (sortParam) {
+            case NAME -> reminders = dirParam == DirectionSort.ASC
                     ? reminderRepository.findByUserEmailOrderByTitleAsc(email)
                     : reminderRepository.findByUserEmailOrderByTitleDesc(email);
 
-            case "date" -> reminders = dir.equals("asc")
+            case DATE -> reminders = dirParam == DirectionSort.ASC
                     ? reminderRepository.findByUserEmailOrderByRemindAsc(email)
                     : reminderRepository.findByUserEmailOrderByRemindDesc(email);
 

@@ -1,4 +1,4 @@
-package enums;
+package com.example.reminderapp.enums;
 
 public enum LogMessage {
     REQUEST_PREFIX("Получен запрос на "),
@@ -14,4 +14,3 @@ public enum LogMessage {
         return text;
     }
 }
-

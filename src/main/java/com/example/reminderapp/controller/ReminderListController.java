@@ -4,7 +4,7 @@ import com.example.reminderapp.dto.ReminderResponseDTO;
 import com.example.reminderapp.service.ReminderService;
 import com.example.reminderapp.validation.ValidDirection;
 import com.example.reminderapp.validation.ValidSortingParam;
-import enums.LogMessage;
+import com.example.reminderapp.enums.LogMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
