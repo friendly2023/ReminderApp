@@ -1,17 +1,16 @@
 package com.example.reminderapp.validation.impl;
 
-import com.example.reminderapp.enums.DirectionSort;
-import com.example.reminderapp.validation.ValidDirection;
+import com.example.reminderapp.enums.FilterParam;
+import com.example.reminderapp.validation.ValidFilterParam;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 import java.util.Set;
 
-public class DirectionValidator implements ConstraintValidator<ValidDirection, String> {
+public class FilterParamValidator implements ConstraintValidator<ValidFilterParam, String> {
 
     private static final Set<String> ALLOWED_VALUES = Set.of(
-            DirectionSort.ASC.text().toLowerCase(),
-            DirectionSort.DESC.text().toLowerCase()
+            FilterParam.DATE.text().toLowerCase()
     );
 
     @Override
