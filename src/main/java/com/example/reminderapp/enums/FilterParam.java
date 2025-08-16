@@ -1,12 +1,10 @@
 package com.example.reminderapp.enums;
 
-public enum DirectionSort {
-    ASC("asc"),
-    DESC("desc");
-
+public enum FilterParam {
+    DATE("date");
     private final String text;
 
-    DirectionSort(String text) {
+    FilterParam(String text) {
         this.text = text;
     }
 

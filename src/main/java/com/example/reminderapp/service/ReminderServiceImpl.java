@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Service
@@ -127,6 +128,39 @@ public class ReminderServiceImpl implements ReminderService {
         }
 
         log.info("Получен отсортированный список напоминаний");
+
+        return reminders.stream()
+                .map(reminderMapper::toReminderResponseDTO)
+                .toList();
+    }
+
+    @Override
+    public List<ReminderResponseDTO> getListFilterRemindersByDate(String email,
+                                                                  ZonedDateTime from,
+                                                                  ZonedDateTime to,
+                                                                  String direction) {
+
+        log.debug("getListFilterReminders стартовал: email={}, from={}, to={}, direction={}",
+                email, from, to, direction);
+
+        DirectionSort directionSort;
+        directionSort = DirectionSort.valueOf(direction.toUpperCase());
+
+        List<Reminder> reminders;
+
+        switch (directionSort) {
+            case ASC -> reminders = reminderRepository.findFilteredRemindersAsc(email,
+                    from,
+                    to);
+
+            case DESC -> reminders = reminderRepository.findFilteredRemindersDESC(email,
+                    from,
+                    to);
+
+            default -> throw new IllegalArgumentException("Неверный параметр сортировки: " + directionSort);
+        }
+
+        log.info("Получен отфильтрованный список напоминаний");
 
         return reminders.stream()
                 .map(reminderMapper::toReminderResponseDTO)
