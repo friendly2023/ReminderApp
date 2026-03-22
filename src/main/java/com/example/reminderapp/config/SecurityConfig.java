@@ -31,9 +31,10 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/error").permitAll()
-                        .requestMatchers("/domain/api/v1/reminder/**").authenticated()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()//все запросы
+//                        .requestMatchers("/", "/error").permitAll()
+//                        .requestMatchers("/domain/api/v1/reminder/**").authenticated()
+//                        .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
